@@ -1,0 +1,7 @@
+# 核心依赖
+flask>=2.0.0
+requests>=2.25.0
+jieba>=0.42.0
+
+# 开发工具（可选）
+pyinstaller>=6.0.0
