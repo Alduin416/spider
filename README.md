@@ -39,7 +39,7 @@
 
 1. 克隆本仓库：
 ```bash
-git clone https://github.com/[你的用户名]/baidu-hot-search.git
+git clone https://github.com/Alduin416/baidu-hot-search.git
 cd baidu-hot-search
 ```
 
@@ -173,4 +173,4 @@ https://top.baidu.com/api/board?platform=wise&tab=realtime&rn=50
 
 ---
 
-**声明**：本项目仅供学习交流使用，请勿用于商业用途。
+**声明**：本项目仅供学习交流使用。
