@@ -1,4 +1,4 @@
-# 侘寂 - 百度热搜爬虫与 Web 展示平台
+# 百度热搜爬虫与 Web 展示平台
 
 [![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
