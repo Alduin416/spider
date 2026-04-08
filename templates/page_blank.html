@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>侘寂 - 第 {{ page_num }} 页</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Zen+Old+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================
+           CSS 变量定义
+           ========================================== */
+        :root {
+            /* 主色调 */
+            --color-primary: #d4a064;
+            --color-primary-rgb: 212, 160, 100;
+            --color-accent: #c84a3a;
+            --color-accent-rgb: 200, 74, 58;
+
+            /* 背景色 */
+            --color-bg-dark: #1a1a2e;
+            --color-bg-darker: #16213e;
+
+            /* 文字颜色 */
+            --color-text-light: #f0e6d2;
+            --color-text-muted: rgba(212, 160, 100, 0.5);
+            --color-text-dim: rgba(212, 160, 100, 0.4);
+            --color-text-faint: rgba(212, 160, 100, 0.3);
+            --color-text-very-faint: rgba(212, 160, 100, 0.2);
+
+            /* 边框 */
+            --border-primary: rgba(212, 160, 100, 0.25);
+            --border-light: rgba(212, 160, 100, 0.15);
+
+            /* 背景叠加 */
+            --bg-overlay: rgba(26, 26, 46, 0.88);
+            --bg-overlay-light: rgba(255, 248, 220, 0.02);
+
+            /* 字体 */
+            --font-serif: 'Zen Old Mincho', 'Noto Serif JP', 'Microsoft YaHei', serif;
+
+            /* 动画 */
+            --transition-fast: 0.3s ease;
+        }
+
+        /* ==========================================
+           基础样式
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background: var(--color-bg-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 根据页码切换背景图 - 富岳三十六景系列 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/static/images/hokusai_bg_{{ page_num }}.jpg') center center / cover no-repeat;
+            opacity: 0.35;
+            z-index: 0;
+            filter: saturate(0.6) brightness(0.75);
+        }
+
+        /* 和纸纹理 */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 248, 220, 0.02) 0px,
+                    rgba(255, 248, 220, 0.02) 1px,
+                    transparent 1px,
+                    transparent 3px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(255, 248, 220, 0.015) 0px,
+                    rgba(255, 248, 220, 0.015) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(26, 26, 46, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 160, 100, 0.25);
+            border-radius: 2px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 248, 220, 0.08);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 顶部装饰线 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #d4a064 30%, 
+                #c84a3a 50%, 
+                #d4a064 70%, 
+                transparent 100%
+            );
+        }
+
+        .header {
+            background: linear-gradient(180deg, 
+                rgba(26, 26, 46, 0.95) 0%, 
+                rgba(22, 33, 62, 0.9) 100%
+            );
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 1px solid rgba(212, 160, 100, 0.15);
+            position: relative;
+        }
+
+        .header::after {
+            content: '〜';
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(212, 160, 100, 0.3);
+            font-size: 20px;
+            letter-spacing: 25px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #d4a064;
+            text-shadow: 
+                0 0 25px rgba(212, 160, 100, 0.25),
+                2px 2px 6px rgba(0, 0, 0, 0.5);
+            letter-spacing: 15px;
+        }
+
+        .header p {
+            margin-top: 20px;
+            font-size: 13px;
+            color: rgba(212, 160, 100, 0.5);
+            letter-spacing: 5px;
+        }
+
+        .empty-content {
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .empty-content .zen-circle {
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(212, 160, 100, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: rgba(212, 160, 100, 0.3);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { 
+                border-color: rgba(212, 160, 100, 0.2);
+                box-shadow: 0 0 20px rgba(212, 160, 100, 0.05);
+            }
+            50% { 
+                border-color: rgba(212, 160, 100, 0.4);
+                box-shadow: 0 0 30px rgba(212, 160, 100, 0.15);
+            }
+        }
+
+        .empty-content p {
+            font-size: 14px;
+            color: rgba(212, 160, 100, 0.4);
+            letter-spacing: 4px;
+            line-height: 2;
+        }
+
+        .empty-content .haiku {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(255, 248, 220, 0.02);
+            border: 1px solid rgba(212, 160, 100, 0.15);
+            color: rgba(212, 160, 100, 0.5);
+            font-size: 15px;
+            line-height: 2.2;
+            letter-spacing: 3px;
+        }
+
+        /* 页面导航 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 25px 40px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(212, 160, 100, 0.15);
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 10px 16px;
+            background: transparent;
+            border: 1px solid rgba(212, 160, 100, 0.25);
+            color: rgba(212, 160, 100, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Zen Old Mincho', serif;
+            font-size: 14px;
+            min-width: 42px;
+            text-align: center;
+        }
+
+        .pagination a:hover {
+            border-color: #d4a064;
+            color: #d4a064;
+            background: rgba(212, 160, 100, 0.1);
+        }
+
+        .pagination .current {
+            background: rgba(212, 160, 100, 0.2);
+            color: #d4a064;
+            border-color: #d4a064;
+        }
+
+        .pagination a.disabled, .pagination span.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* 扫描线效果 - 更柔和 */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(212, 160, 100, 0.08);
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* 飘落花瓣 */
+        .petals-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(ellipse at center, 
+                rgba(255, 183, 197, 0.5) 0%, 
+                rgba(212, 160, 100, 0.3) 100%
+            );
+            border-radius: 50% 0 50% 0;
+            animation: petalFall linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% {
+                transform: translateY(100vh) rotate(360deg) translateX(40px);
+                opacity: 0;
+            }
+        }
+
+        /* 左上角免责声明 */
+        .disclaimer {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            color: rgba(212, 160, 100, 0.4);
+            font-size: 12px;
+            letter-spacing: 4px;
+            z-index: 100;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        /* 背景画作信息 */
+        .bg-info {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            color: rgba(212, 160, 100, 0.35);
+            font-size: 11px;
+            letter-spacing: 2px;
+            z-index: 100;
+            text-align: right;
+            line-height: 1.8;
+        }
+
+        /* 右上角座右铭 */
+        .motto-container {
+            position: fixed;
+            top: 25px;
+            right: 90px;
+            display: flex;
+            gap: 25px;
+            z-index: 100;
+        }
+
+        .motto-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 28px;
+            color: rgba(212, 160, 100, 0.7);
+            letter-spacing: 12px;
+            text-shadow: 0 0 15px rgba(212, 160, 100, 0.3);
+            font-family: '和风书道飞龙体', 'HWSHFeiLong', 'STKaiti', serif;
+            padding: 15px 10px;
+            border: 1px solid rgba(212, 160, 100, 0.2);
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .motto-text:hover {
+            color: #d4a064;
+            border-color: rgba(212, 160, 100, 0.5);
+            box-shadow: 0 0 20px rgba(212, 160, 100, 0.2);
+        }
+
+        /* 音乐按钮 */
+        .music-btn {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(212, 160, 100, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .music-btn:hover {
+            border-color: #d4a064;
+            box-shadow: 0 0 15px rgba(212, 160, 100, 0.2);
+        }
+
+        .music-btn.playing {
+            border-color: #d4a064;
+            background: rgba(212, 160, 100, 0.1);
+        }
+
+        .tomoe-svg {
+            width: 28px;
+            height: 28px;
+            fill: rgba(212, 160, 100, 0.6);
+        }
+
+        .music-btn.playing .tomoe-svg {
+            fill: #d4a064;
+            animation: tomoeRotate 4s linear infinite;
+        }
+
+        @keyframes tomoeRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 扫描线 -->
+    <div class="scanline"></div>
+
+    <!-- 花瓣容器 -->
+    <div class="petals-container" id="petalsContainer"></div>
+
+    <!-- 左上角免责声明 -->
+    <div class="disclaimer">仅供本人学习使用</div>
+
+    <!-- 右上角座右铭 -->
+    <div class="motto-container">
+        <div class="motto-text">耐心</div>
+        <div class="motto-text">忠义</div>
+    </div>
+
+    <!-- 音乐按钮 -->
+    <button class="music-btn" id="musicBtn" onclick="toggleBGM()" title="播放/暂停背景音乐">
+        <svg class="tomoe-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+    </button>
+
+    <!-- BGM 背景音乐 -->
+    <audio id="bgm" loop>
+        <source src="/static/Haggstrom-C418.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 背景画作信息 -->
+    <div class="bg-info">
+        葛飾北斎 · 富嶽三十六景<br>
+        第 {{ page_num }} 景
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>侘寂</h1>
+            <p>第 {{ page_num }} 頁</p>
+        </div>
+
+        <div class="empty-content">
+            <div class="zen-circle">空</div>
+            <p>此页为空</p>
+            <p>请前往第一页查看热搜内容</p>
+            
+            <div class="haiku">
+                古池や<br>
+                蛙飛び込む<br>
+                水の音<br>
+                <span style="font-size: 12px; opacity: 0.6;">—— 松尾芭蕉</span>
+            </div>
+        </div>
+
+        <!-- 页面导航 -->
+        <div class="pagination">
+            {% if page_num > 1 %}
+                <a href="/page/{{ page_num - 1 }}">« 前へ</a>
+            {% else %}
+                <span class="disabled">« 前へ</span>
+            {% endif %}
+
+            {% for i in range(1, 11) %}
+                {% if i == page_num %}
+                    <span class="current">{{ i }}</span>
+                {% else %}
+                    <a href="/page/{{ i }}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_num < 10 %}
+                <a href="/page/{{ page_num + 1 }}">次へ »</a>
+            {% else %}
+                <span class="disabled">次へ »</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // BGM 音频控制
+        // ==========================================
+        const bgm = document.getElementById('bgm');
+        let bgmPlaying = false;
+        const musicBtn = document.getElementById('musicBtn');
+
+        bgm.volume = 0.3;
+
+        /**
+         * 从 localStorage 恢复 BGM 播放状态
+         */
+        function restoreBGMState() {
+            const savedState = localStorage.getItem('bgm_playing');
+            const savedTime = localStorage.getItem('bgm_currentTime');
+
+            if (savedState === 'true' && savedTime) {
+                bgm.currentTime = parseFloat(savedTime);
+                bgm.play().then(() => {
+                    bgmPlaying = true;
+                    musicBtn.classList.add('playing');
+                }).catch(error => {
+                    console.log('自动播放被阻止，需要用户交互:', error);
+                });
+            }
+        }
+
+        /**
+         * 保存 BGM 播放状态到 localStorage
+         */
+        function saveBGMState() {
+            if (bgmPlaying) {
+                localStorage.setItem('bgm_playing', 'true');
+                localStorage.setItem('bgm_currentTime', bgm.currentTime.toString());
+            } else {
+                localStorage.setItem('bgm_playing', 'false');
+            }
+        }
+
+        // 每 500ms 保存一次进度
+        setInterval(saveBGMState, 500);
+
+        // 页面事件监听
+        window.addEventListener('beforeunload', saveBGMState);
+        window.addEventListener('load', restoreBGMState);
+
+        /**
+         * 切换 BGM 播放状态
+         */
+        function toggleBGM() {
+            if (bgmPlaying) {
+                bgm.pause();
+                bgmPlaying = false;
+                musicBtn.classList.remove('playing');
+                localStorage.setItem('bgm_playing', 'false');
+            } else {
+                bgm.play().then(() => {
+                    bgmPlaying = true;
+                    musicBtn.classList.add('playing');
+                    localStorage.setItem('bgm_playing', 'true');
+                }).catch(error => {
+                    console.log('播放失败:', error);
+                });
+            }
+        }
+
+        // ==========================================
+        // 花瓣动画
+        // ==========================================
+
+        /**
+         * 创建飘落的花瓣动画效果
+         */
+        function createPetals() {
+            const container = document.getElementById('petalsContainer');
+            const petalCount = 20;
+
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.animationDuration = (Math.random() * 7 + 9) + 's';
+                petal.style.animationDelay = (Math.random() * 7) + 's';
+                petal.style.width = (Math.random() * 5 + 5) + 'px';
+                petal.style.height = petal.style.width;
+                container.appendChild(petal);
+            }
+        }
+
+        // 页面加载时创建花瓣
+        window.onload = function() {
+            createPetals();
+        };
+    </script>
+</body>
+</html>
